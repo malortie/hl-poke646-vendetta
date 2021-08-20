@@ -59,6 +59,7 @@ CCrossbow g_Crossbow;
 CShotgun g_Shotgun;
 CGauss g_Gauss;
 CSatchel g_Satchel;
+CPar21 g_Par21;
 
 
 /*
@@ -605,6 +606,7 @@ void HUD_InitClientWeapons( void )
 	HUD_PrepEntity( &g_Crossbow		, &player );
 	HUD_PrepEntity( &g_Gauss	, &player );
 	HUD_PrepEntity( &g_Satchel	, &player );
+	HUD_PrepEntity( &g_Par21	, &player );
 }
 
 /*
@@ -698,6 +700,9 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		pWeapon = &g_Satchel;
 		break;
 
+	case WEAPON_PAR21:
+		pWeapon = &g_Par21;
+		break;
 	}
 
 	// Store pointer to our destination entity_state_t so we can get our origin, etc. from it
@@ -812,6 +817,10 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		 ( ( CCrossbow * )player.m_pActiveItem)->m_fInZoom = static_cast<int>(from->client.vuser2[ 1 ]);
 		 ( ( CCrossbow * )player.m_pActiveItem)->m_bFirstTimeDrawback = static_cast<BOOL>(from->client.vuser2[ 2 ]);
 	}
+	else if ( player.m_pActiveItem->m_iId == WEAPON_PAR21 )
+	{
+		player.ammo_nato = (int)from->client.vuser2[ 1 ];
+	}
 	
 	// Don't go firing anything if we have died or are spectating
 	// Or if we don't have a weapon model deployed
@@ -882,6 +891,10 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 	{
 		 to->client.vuser2[ 1 ] = ( ( CCrossbow * )player.m_pActiveItem)->m_fInZoom;
 		 to->client.vuser2[ 2 ] = ( ( CCrossbow * )player.m_pActiveItem)->m_bFirstTimeDrawback;
+	}
+	else if ( player.m_pActiveItem->m_iId == WEAPON_PAR21 )
+	{
+		 to->client.vuser2[ 1 ] = player.ammo_nato;
 	}
 
 	// Make sure that weapon animation matches what the game .dll is telling us

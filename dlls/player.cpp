@@ -1143,12 +1143,13 @@ void CBasePlayer::TabulateAmmo()
 {
 	ammo_9mm = AmmoInventory( GetAmmoIndex( "nail" ) );
 	ammo_357 = AmmoInventory( GetAmmoIndex( "357" ) );
-	ammo_argrens = AmmoInventory( GetAmmoIndex( "ARgrenades" ) );
+	ammo_argrens = AmmoInventory( GetAmmoIndex( "m203grenades" ) );
 	ammo_bolts = AmmoInventory( GetAmmoIndex( "bolts" ) );
 	ammo_buckshot = AmmoInventory( GetAmmoIndex( "buckshot" ) );
 	ammo_rockets = AmmoInventory( GetAmmoIndex( "rockets" ) );
 	ammo_uranium = AmmoInventory( GetAmmoIndex( "uranium" ) );
 	ammo_hornets = AmmoInventory( GetAmmoIndex( "Hornets" ) );
+	ammo_nato = AmmoInventory( GetAmmoIndex( "NATO" ) );
 }
 
 
@@ -3577,6 +3578,10 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		GiveNamedItem( "weapon_nailgun" );
 		GiveNamedItem( "weapon_xs" );
 		GiveNamedItem( "ammo_xencandy" );
+		GiveNamedItem( "weapon_par21" );
+		GiveNamedItem( "ammo_par21_clip" );
+		GiveNamedItem( "ammo_par21_grenade" );
+		GiveNamedItem( "ammo_m203grenade" );
 
 		gEvilImpulse101 = FALSE;
 		break;

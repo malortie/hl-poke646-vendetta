@@ -1767,6 +1767,10 @@ void UpdateClientData ( const edict_t *ent, int sendweapons, struct clientdata_s
 						cd->vuser2.y = ( ( CCrossbow * )pl->m_pActiveItem)->m_fInZoom;
 						cd->vuser2.z = ( ( CCrossbow * )pl->m_pActiveItem)->m_bFirstTimeDrawback;
 					}
+					else if ( pl->m_pActiveItem->m_iId == WEAPON_PAR21 )
+					{
+						cd->vuser2.y = pl->ammo_nato;
+					}
 				}
 			}
 		}

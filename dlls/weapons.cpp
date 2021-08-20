@@ -348,6 +348,11 @@ void W_Precache(void)
 	UTIL_PrecacheOther("ammo_xencandy");
 
 
+	// par21
+	UTIL_PrecacheOtherWeapon("weapon_par21");
+	UTIL_PrecacheOther("ammo_par21_clip");
+	UTIL_PrecacheOther("ammo_par21_grenade");
+	UTIL_PrecacheOther("ammo_m203grenade");
 
 #if !defined( OEM_BUILD ) && !defined( HLDEMO_BUILD )
 	if ( g_pGameRules->IsDeathmatch() )

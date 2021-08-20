@@ -354,6 +354,9 @@
     <ClCompile Include="..\..\dlls\poke646\xenspit.cpp">
       <Filter>Source Files\dlls\poke646</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\dlls\poke646\par21.cpp">
+      <Filter>Source Files\dlls\poke646</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\dlls\doors.h">

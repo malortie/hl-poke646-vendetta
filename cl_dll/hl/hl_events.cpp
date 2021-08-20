@@ -42,6 +42,8 @@ void EV_SnarkFire( struct event_args_s *args );
 
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
+void EV_FirePar21( struct event_args_s *args );
+void EV_M203( struct event_args_s *args );
 }
 
 /*
@@ -78,5 +80,7 @@ void Game_HookEvents( void )
 	gEngfuncs.pfnHookEvent( "events/firehornet.sc",				EV_HornetGunFire );
 	gEngfuncs.pfnHookEvent( "events/tripfire.sc",				EV_TripmineFire );
 	gEngfuncs.pfnHookEvent( "events/snarkfire.sc",				EV_SnarkFire );
+	gEngfuncs.pfnHookEvent( "events/par21.sc",					EV_FirePar21 );
+	gEngfuncs.pfnHookEvent( "events/m203.sc",					EV_M203 );
 
 }

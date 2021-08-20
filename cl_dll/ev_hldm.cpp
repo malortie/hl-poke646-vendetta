@@ -75,6 +75,8 @@ void EV_SnarkFire( struct event_args_s *args  );
 
 void EV_TrainPitchAdjust( struct event_args_s *args );
 
+void EV_FirePar21( struct event_args_s *args );
+void EV_M203( struct event_args_s *args );
 }
 
 #define VECTOR_CONE_1DEGREES Vector( 0.00873, 0.00873, 0.00873 )
@@ -255,7 +257,7 @@ void EV_WallPuffCallback(struct tempent_s *ent, float frametime, float currentti
 	ent->entity.angles = ent->entity.baseline.vuser1;
 }
 
-void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName )
+void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName, qboolean spawnWallSmoke )
 {
 	int iRand;
 	physent_t *pe;
@@ -293,26 +295,29 @@ void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName )
 			Vector position = pTrace->endpos + pTrace->plane.normal * 2;
 			Vector velocity = pTrace->plane.normal * gEngfuncs.pfnRandomFloat(8, 10);
 
-			TEMPENTITY* pSmoke = gEngfuncs.pEfxAPI->R_TempSprite(
-				position,												// position
-				velocity,												// velocity
-				gEngfuncs.pfnRandomFloat(30, 35) / 100, 				// scale
-				modelindex, 											// model index
-				kRenderTransAlpha, 										// rendermode
-				kRenderFxNoDissipation, 								// renderfx
-				gEngfuncs.pfnRandomFloat(0.25, 0.5), 					// alpha
-				1.0f, 													// life
-				FTENT_SPRANIMATE);										// flags
-
-			if (pSmoke)
+			if (spawnWallSmoke)
 			{
-				Vector angles;
-				VectorAngles(velocity, angles);
+				TEMPENTITY* pSmoke = gEngfuncs.pEfxAPI->R_TempSprite(
+					position,												// position
+					velocity,												// velocity
+					gEngfuncs.pfnRandomFloat(30, 35) / 100, 				// scale
+					modelindex, 											// model index
+					kRenderTransAlpha, 										// rendermode
+					kRenderFxNoDissipation, 								// renderfx
+					gEngfuncs.pfnRandomFloat(0.25, 0.5), 					// alpha
+					1.0f, 													// life
+					FTENT_SPRANIMATE);										// flags
 
-				pSmoke->flags |= FTENT_CLIENTCUSTOM;
-				pSmoke->entity.curstate.framerate = gEngfuncs.pfnRandomFloat(26, 30);
-				pSmoke->entity.baseline.vuser1 = angles;
-				pSmoke->callback = EV_WallPuffCallback;
+				if (pSmoke)
+				{
+					Vector angles;
+					VectorAngles(velocity, angles);
+
+					pSmoke->flags |= FTENT_CLIENTCUSTOM;
+					pSmoke->entity.curstate.framerate = gEngfuncs.pfnRandomFloat(26, 30);
+					pSmoke->entity.baseline.vuser1 = angles;
+					pSmoke->callback = EV_WallPuffCallback;
+				}
 			}
 		}
 	}
@@ -336,7 +341,9 @@ void EV_HLDM_DecalGunshot( pmtrace_t *pTrace, int iBulletType )
 		case BULLET_PLAYER_357:
 		default:
 			// smoke and decal
-			EV_HLDM_GunshotDecalTrace( pTrace, EV_HLDM_DamageDecal( pe ) );
+			EV_HLDM_GunshotDecalTrace( pTrace, EV_HLDM_DamageDecal( pe ), 
+				// Poke646: Vendetta - Only emit wall smoke when shooting with the shotgun.
+				iBulletType == BULLET_PLAYER_BUCKSHOT ? true : false );
 			break;
 		}
 	}
@@ -1715,7 +1722,100 @@ int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 )
 }
 
 
+//======================
+//	    PAR21 START
+//======================
+void EV_FirePar21( event_args_t *args )
+{
+	int idx;
+	vec3_t origin;
+	vec3_t angles;
+	vec3_t velocity;
 
+	vec3_t ShellVelocity;
+	vec3_t ShellOrigin;
+	int shell;
+	vec3_t vecSrc, vecAiming;
+	vec3_t up, right, forward;
+	float flSpread = 0.01;
+
+	idx = args->entindex;
+	VectorCopy( args->origin, origin );
+	VectorCopy( args->angles, angles );
+	VectorCopy( args->velocity, velocity );
+
+	AngleVectors( angles, forward, right, up );
+
+	shell = gEngfuncs.pEventAPI->EV_FindModelIndex ("models/shell.mdl");// brass shell
+	
+	if ( EV_IsLocal( idx ) )
+	{
+		// Add muzzle flash to current weapon model
+		EV_MuzzleFlash();
+		gEngfuncs.pEventAPI->EV_WeaponAnimation( PAR21_FIRE1 + gEngfuncs.pfnRandomLong(0,2), 2 );
+
+		V_PunchAxis( 0, gEngfuncs.pfnRandomFloat( -2, 2 ) );
+	}
+
+	EV_GetDefaultShellInfo( args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 20, -12, 4 );
+
+	EV_EjectBrass ( ShellOrigin, ShellVelocity, angles[ YAW ], shell, TE_BOUNCE_SHELL ); 
+
+	switch( gEngfuncs.pfnRandomLong( 0, 2 ) )
+	{
+	case 0:
+		gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/par21_1.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong( 0, 0xf ) );
+		break;
+	case 1:
+		gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/par21_2.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong( 0, 0xf ) );
+		break;
+	case 2:
+		gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/par21_3.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong( 0, 0xf ) );
+		break;
+	}
+
+	EV_GetGunPosition( args, vecSrc, origin );
+	VectorCopy( forward, vecAiming );
+
+	if ( gEngfuncs.GetMaxClients() > 1 )
+	{
+		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_MP5, 2, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+	}
+	else
+	{
+		EV_HLDM_FireBullets( idx, forward, right, up, 1, vecSrc, vecAiming, 8192, BULLET_PLAYER_MP5, 2, &tracerCount[idx-1], args->fparam1, args->fparam2 );
+	}
+}
+
+// We only predict the animation and sound
+// The grenade is still launched from the server.
+void EV_M203( event_args_t *args )
+{
+	int idx;
+	vec3_t origin;
+	
+	idx = args->entindex;
+	VectorCopy( args->origin, origin );
+
+	if ( EV_IsLocal( idx ) )
+	{
+		gEngfuncs.pEventAPI->EV_WeaponAnimation( PAR21_LAUNCH, 2 );
+		V_PunchAxis( 0, -10 );
+	}
+	
+	switch( gEngfuncs.pfnRandomLong( 0, 1 ) )
+	{
+	case 0:
+		gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/glauncher.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong( 0, 0xf ) );
+		break;
+	case 1:
+		gEngfuncs.pEventAPI->EV_PlaySound( idx, origin, CHAN_WEAPON, "weapons/glauncher2.wav", 1, ATTN_NORM, 0, 94 + gEngfuncs.pfnRandomLong( 0, 0xf ) );
+		break;
+	}
+}
+//======================
+//		 PAR21 END
+//======================
 
 
 

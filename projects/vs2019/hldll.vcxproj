@@ -177,6 +177,7 @@ if exist "$(TargetDir)$(TargetName).pdb" copy "$(TargetDir)$(TargetName).pdb" "$
     <ClCompile Include="..\..\dlls\poke646\firetrail.cpp" />
     <ClCompile Include="..\..\dlls\poke646\genericmodel.cpp" />
     <ClCompile Include="..\..\dlls\poke646\nail.cpp" />
+    <ClCompile Include="..\..\dlls\poke646\par21.cpp" />
     <ClCompile Include="..\..\dlls\poke646\robocop.cpp" />
     <ClCompile Include="..\..\dlls\poke646\xenspit.cpp" />
     <ClCompile Include="..\..\dlls\python.cpp" />

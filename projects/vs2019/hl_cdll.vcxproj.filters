@@ -312,6 +312,9 @@
     <ClCompile Include="..\..\cl_dll\poke646\music.cpp">
       <Filter>Source Files\cl_dll\poke646</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\dlls\poke646\par21.cpp">
+      <Filter>Source Files\_hl\dlls\poke646</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\cl_dll\kbutton.h">

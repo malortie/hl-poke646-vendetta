@@ -70,6 +70,7 @@ public:
 #define WEAPON_CROSSBOW			5
 #define WEAPON_GAUSS			6
 #define	WEAPON_SATCHEL			7
+#define WEAPON_PAR21			8
 
 #define WEAPON_ALLWEAPONS		(~(1<<WEAPON_SUIT))
 
@@ -89,6 +90,7 @@ public:
 #define CROSSBOW_WEIGHT		10
 #define GAUSS_WEIGHT		20
 #define SATCHEL_WEIGHT		-10
+#define PAR21_WEIGHT		15
 
 
 // weapon clip/carry ammo capacities
@@ -100,6 +102,7 @@ public:
 #define	_9MM_MAX_CARRY			250
 #define M203_GRENADE_MAX_CARRY	10
 #define _357_MAX_CARRY			36
+#define PAR21_MAX_CARRY			150
 
 // the maximum amount of ammo each weapon's clip can hold
 #define WEAPON_NOCLIP			-1
@@ -111,6 +114,7 @@ public:
 #define GAUSS_MAX_CLIP			15
 #define SATCHEL_MAX_CLIP		WEAPON_NOCLIP
 #define PYTHON_MAX_CLIP			6
+#define PAR21_MAX_CLIP			30
 
 
 // the default amount of ammo that comes with each gun when it spawns
@@ -120,6 +124,7 @@ public:
 #define CROSSBOW_DEFAULT_GIVE		5
 #define GAUSS_DEFAULT_GIVE			15
 #define SATCHEL_DEFAULT_GIVE		1
+#define PAR21_DEFAULT_GIVE			30
 
 // The amount of ammo given to a player by an ammo item.
 #define AMMO_NAILCLIP_GIVE		GLOCK_MAX_CLIP
@@ -129,6 +134,7 @@ public:
 #define AMMO_M203BOX_GIVE		2
 #define AMMO_URANIUMBOX_GIVE	20
 #define AMMO_357BOX_GIVE		PYTHON_MAX_CLIP
+#define AMMO_PAR21CLIP_GIVE		PAR21_MAX_CLIP
 
 // bullet types
 typedef	enum
@@ -1010,6 +1016,38 @@ private:
 	unsigned short m_usSnarkFire;
 };
 
+// Poke646 Vendetta Par21
+class CPar21 : public CBasePlayerWeapon
+{
+public:
+	void Spawn( void );
+	void Precache( void );
+	int iItemSlot( void ) { return 2; }
+	int GetItemInfo(ItemInfo *p);
+	int AddToPlayer( CBasePlayer *pPlayer );
+
+	void PrimaryAttack( void );
+	void SecondaryAttack( void );
+	int SecondaryAmmoIndex( void );
+	BOOL Deploy( void );
+	void Reload( void );
+	void WeaponIdle( void );
+	float m_flNextAnimTime;
+	int m_iShell;
+
+	virtual BOOL UseDecrement(void)
+	{
+#if defined( CLIENT_WEAPONS )
+		return TRUE;
+#else
+		return FALSE;
+#endif
+	}
+
+private:
+	unsigned short m_usPar21;
+	unsigned short m_usM203;
+};
 
 
 

@@ -92,7 +92,19 @@ enum gauss_e {
 	GAUSS_RELOAD,
 };
 
-void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName );
+enum par21_e
+{
+	PAR21_LONGIDLE = 0,
+	PAR21_IDLE1,
+	PAR21_LAUNCH,
+	PAR21_RELOAD,
+	PAR21_DEPLOY,
+	PAR21_FIRE1,
+	PAR21_FIRE2,
+	PAR21_FIRE3,
+};
+
+void EV_HLDM_GunshotDecalTrace( pmtrace_t *pTrace, char *decalName, qboolean spawnWallSmoke );
 void EV_HLDM_DecalGunshot( pmtrace_t *pTrace, int iBulletType );
 int EV_HLDM_CheckTracer( int idx, float *vecSrc, float *end, float *forward, float *right, int iBulletType, int iTracerFreq, int *tracerCount );
 void EV_HLDM_FireBullets( int idx, float *forward, float *right, float *up, int cShots, float *vecSrc, float *vecDirShooting, float flDistance, int iBulletType, int iTracerFreq, int *tracerCount, float flSpreadX, float flSpreadY );

@@ -573,7 +573,7 @@ class CCrossbow : public CBasePlayerWeapon
 public:
 	void Spawn( void );
 	void Precache( void );
-	int iItemSlot( ) { return 3; }
+	int iItemSlot( ) { return 4; }
 	int GetItemInfo(ItemInfo *p);
 
 	void FireBolt( void );

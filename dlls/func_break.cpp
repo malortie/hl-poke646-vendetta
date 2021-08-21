@@ -52,9 +52,9 @@ const char *CBreakable::pSpawnObjects[] =
 	NULL,				// 13
 	NULL,				// 14
 	"weapon_pipebomb",	// 15
-	NULL,				// 16
-	NULL,				// 17
-	NULL,				// 18
+	"weapon_par21",		// 16
+	"ammo_par21_clip",	// 17
+	"ammo_par21_grenade", // 18
 	NULL,				// 19
 	NULL,				// 20
 	NULL,				// 21

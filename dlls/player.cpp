@@ -2110,7 +2110,7 @@ void CBasePlayer::CheckTimeBasedDamage()
 				bDuration = NERVEGAS_DURATION;
 				break;
 			case itbd_Poison:
-//				TakeDamage(pev, pev, POISON_DAMAGE, DMG_GENERIC); // Poke646 - No take damage poison
+				TakeDamage(pev, pev, POISON_DAMAGE, DMG_GENERIC);
 				bDuration = POISON_DURATION;
 				break;
 			case itbd_Radiation:

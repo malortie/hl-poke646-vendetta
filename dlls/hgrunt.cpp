@@ -276,7 +276,6 @@ int CHGrunt::IRelationship ( CBaseEntity *pTarget )
 //=========================================================
 void CHGrunt :: GibMonster ( void )
 {
-/* Poke646 - Do not drop weapons.  
 	Vector	vecGunPos;
 	Vector	vecGunAngles;
 
@@ -284,14 +283,10 @@ void CHGrunt :: GibMonster ( void )
 	{// throw a gun if the grunt has one
 		GetAttachment( 0, vecGunPos, vecGunAngles );
 		
-		CBaseEntity *pGun;
-		if (FBitSet( pev->weapons, HGRUNT_SHOTGUN ))
+		CBaseEntity *pGun = NULL;
+		if (FBitSet( pev->weapons, HGRUNT_9MMAR ))
 		{
-			pGun = DropItem( "weapon_shotgun", vecGunPos, vecGunAngles );
-		}
-		else
-		{
-			pGun = DropItem( "weapon_9mmAR", vecGunPos, vecGunAngles );
+			pGun = DropItem( "weapon_par21", vecGunPos, vecGunAngles );
 		}
 		if ( pGun )
 		{
@@ -301,7 +296,7 @@ void CHGrunt :: GibMonster ( void )
 	
 		if (FBitSet( pev->weapons, HGRUNT_GRENADELAUNCHER ))
 		{
-			pGun = DropItem( "ammo_ARgrenades", vecGunPos, vecGunAngles );
+			pGun = DropItem( "ammo_par21_grenade", vecGunPos, vecGunAngles );
 			if ( pGun )
 			{
 				pGun->pev->velocity = Vector (RANDOM_FLOAT(-100,100), RANDOM_FLOAT(-100,100), RANDOM_FLOAT(200,300));
@@ -309,7 +304,6 @@ void CHGrunt :: GibMonster ( void )
 			}
 		}
 	}
-*/
 
 	CBaseMonster :: GibMonster();
 }
@@ -858,21 +852,15 @@ void CHGrunt :: HandleAnimEvent( MonsterEvent_t *pEvent )
 			// switch to body group with no gun.
 			SetBodygroup( GUN_GROUP, GUN_NONE );
 
-			/* Poke646 - Do not drop weapons.   
 			// now spawn a gun.
-			if (FBitSet( pev->weapons, HGRUNT_SHOTGUN ))
+			if (FBitSet( pev->weapons, HGRUNT_9MMAR ))
 			{
-				 DropItem( "weapon_shotgun", vecGunPos, vecGunAngles );
-			}
-			else
-			{
-				 DropItem( "weapon_9mmAR", vecGunPos, vecGunAngles );
+				 DropItem( "weapon_par21", vecGunPos, vecGunAngles );
 			}
 			if (FBitSet( pev->weapons, HGRUNT_GRENADELAUNCHER ))
 			{
-				DropItem( "ammo_ARgrenades", BodyTarget( pev->origin ), vecGunAngles );
+				DropItem( "ammo_par21_grenade", BodyTarget( pev->origin ), vecGunAngles );
 			}
-			*/
 			}
 			break;
 
@@ -1011,9 +999,6 @@ void CHGrunt :: Spawn()
 		// pev->weapons = HGRUNT_SHOTGUN;
 		// pev->weapons = HGRUNT_9MMAR | HGRUNT_GRENADELAUNCHER;
 	}
-
-	// Poke646 - No grenade launch allowed.
-	ClearBits(pev->weapons, HGRUNT_GRENADELAUNCHER);
 
 	if (FBitSet( pev->weapons, HGRUNT_SHOTGUN ))
 	{

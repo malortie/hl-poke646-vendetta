@@ -2871,12 +2871,12 @@ ReturnSpot:
 void CBasePlayer::Spawn( void )
 {
 	pev->classname		= MAKE_STRING("player");
-	pev->health			= 50;
+	pev->health			= 100;
 	pev->armorvalue		= 0;
 	pev->takedamage		= DAMAGE_AIM;
 	pev->solid			= SOLID_SLIDEBOX;
 	pev->movetype		= MOVETYPE_WALK;
-	pev->max_health		= 100;
+	pev->max_health		= pev->health;
 	pev->flags		   &= FL_PROXY;	// keep proxy flag sey by engine
 	pev->flags		   |= FL_CLIENT;
 	pev->air_finished	= gpGlobals->time + 12;

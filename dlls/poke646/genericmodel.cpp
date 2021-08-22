@@ -21,6 +21,8 @@
 #include "weapons.h"
 #include "player.h"
 
+#define SF_GENERICMODEL_PLAY_SEQUENCE	1
+
 class CGenericModel : public CBaseAnimating
 {
 public:
@@ -30,6 +32,8 @@ public:
 	void KeyValue(KeyValueData* pkvd);
 
 	void EXPORT IdleThink(void);
+
+	inline BOOL CanPlaySequence() const { return FBitSet(pev->spawnflags, SF_GENERICMODEL_PLAY_SEQUENCE); }
 
 	string_t m_iszSequence; // Temporary.
 };
@@ -59,7 +63,7 @@ void CGenericModel::Spawn(void)
 	SET_MODEL( ENT(pev), STRING(pev->model) );
 	UTIL_SetSize( pev, Vector(0, 0, 0), Vector(0, 0, 0) );
 
-	if (!FStringNull(m_iszSequence))
+	if (CanPlaySequence() && !FStringNull(m_iszSequence))
 	{
 		pev->sequence = LookupSequence(STRING(m_iszSequence));
 
@@ -77,13 +81,21 @@ void CGenericModel::Spawn(void)
 	pev->frame = 0;
 	ResetSequenceInfo();
 
-	SetThink(&CGenericModel::IdleThink);
 	InitBoneControllers();
+
+	if (CanPlaySequence())
+	{
+		SetThink(&CGenericModel::IdleThink);
+		pev->nextthink = gpGlobals->time + 0.1;
+	}
+	else
+	{
+		// Prevent advancing sequence.
+		pev->framerate = 0;
+	}
 
 	SetTouch(NULL);
 	SetUse(NULL);
-
-	pev->nextthink = gpGlobals->time + 0.1;
 }
 
 void CGenericModel::Precache(void)

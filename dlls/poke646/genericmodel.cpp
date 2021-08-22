@@ -78,6 +78,8 @@ void CGenericModel::Spawn(void)
 	ResetSequenceInfo();
 
 	SetThink(&CGenericModel::IdleThink);
+	InitBoneControllers();
+
 	SetTouch(NULL);
 	SetUse(NULL);
 

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [vendetta/2.0.0] - 2021-08-28
+## [2.0.0] - 2021-11-07
 
 ### Added
 
@@ -73,7 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Nail emitting sparks when touching sky surfaces
 - CGenericModel bone controllers not initialized
 
-## [vendetta/1.0.0] - 2016-02-01
+## [1.0.0] - 2016-02-01
 
 ### Added
 
